@@ -1,14 +1,25 @@
 package com.project.domain;
 
+import javax.persistence.*;
 import java.util.Map;
 import java.util.Objects;
-
+@Entity
+@Table(name = "introduction")
 public class Introduction {
-
+    @Id@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "introduction_id")
     private Integer id;
+    @ManyToOne
+    @JoinColumn(name = "entrant_id", nullable = false)
     private Entrant entrant;
+    @ManyToOne
+    @JoinColumn(name = "speciality_id", nullable = false)
     private Speciality speciality;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "mark_of_exams")
+    @MapKeyColumn(name = "subject_id")
     private Map<Subject,Integer> markOfExams;
+    @Column
     private Integer attMark;
 
     public Introduction() {

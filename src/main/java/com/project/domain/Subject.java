@@ -1,12 +1,18 @@
 package com.project.domain;
 
+import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
-
+@Entity
+@Table(name = "subject")
 public class Subject {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "subject_id")
     private Integer id;
+    @Column
     private String title;
+    @ManyToMany(mappedBy = "examSub")
     private Set<Faculty> faculties;
 
     public Subject() {

@@ -1,15 +1,35 @@
 package com.project.domain;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Set;
+@Entity
+@Table(name = "entrant")
+public class Entrant extends User {
 
-public class Entrant {
-
+    @Column
     private LocalDate birthday;
+    @Column
     private String address;
+    @Column
     private String school;
-    private Set<Speciality> specialities;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "speciality_entrant", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns =@JoinColumn(name = "speciality_id") )
+    private Set<Speciality> entrantSpeciality;
+    @Transient
+    @MapsId
+    private User user;
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "entrant")
+    @Column(nullable = false)
     private Set<Introduction> introductions;
 
     public Entrant(LocalDate birthday,String address, String school) {
@@ -18,12 +38,16 @@ public class Entrant {
         this.school = school;
     }
 
-    public Entrant(LocalDate birthday,String address, String school,Set<Speciality> specialities,Set<Introduction> introductions) {
+    public Entrant(LocalDate birthday,String address, String school,Set<Speciality> entrantSpeciality,Set<Introduction> introductions) {
         this.birthday = birthday;
         this.address = address;
         this.school = school;
-        this.specialities = specialities;
+        this.entrantSpeciality = entrantSpeciality;
         this.introductions = introductions;
+    }
+
+    public Entrant() {
+
     }
 
     public LocalDate getBirthday() {
@@ -50,12 +74,12 @@ public class Entrant {
         this.school = school;
     }
 
-    public Set<Speciality> getSpecialities() {
-        return specialities;
+    public Set<Speciality> getEntrantSpeciality() {
+        return entrantSpeciality;
     }
 
-    public void setSpecialities(Set<Speciality> specialities) {
-        this.specialities = specialities;
+    public void setEntrantSpeciality(Set<Speciality> entrantSpeciality) {
+        this.entrantSpeciality = entrantSpeciality;
     }
 
     public Set<Introduction> getIntroductions() {
@@ -70,13 +94,14 @@ public class Entrant {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
         Entrant entrant = (Entrant) o;
-        return Objects.equals(birthday, entrant.birthday) && Objects.equals(address, entrant.address) && Objects.equals(school, entrant.school) && Objects.equals(specialities, entrant.specialities) && Objects.equals(introductions, entrant.introductions);
+        return Objects.equals(birthday, entrant.birthday) && Objects.equals(address, entrant.address) && Objects.equals(school, entrant.school) && Objects.equals(entrantSpeciality, entrant.entrantSpeciality) && Objects.equals(introductions, entrant.introductions);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(birthday, address, school, specialities, introductions);
+        return Objects.hash(super.hashCode(), birthday, address, school, entrantSpeciality, introductions);
     }
 
     @Override
@@ -85,7 +110,7 @@ public class Entrant {
                 "birthday=" + birthday +
                 ", address='" + address + '\'' +
                 ", school='" + school + '\'' +
-                ", specialities=" + specialities +
+                ", entrantSpeciality=" + entrantSpeciality +
                 ", introductions=" + introductions +
                 '}';
     }

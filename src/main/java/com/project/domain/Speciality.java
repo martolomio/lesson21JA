@@ -1,15 +1,26 @@
 package com.project.domain;
 
+import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
-
+@Entity
+@Table(name = "speciality")
 public class Speciality {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "speciality_id")
     private Integer id;
+    @Column
     private String title;
+    @Column
     private Integer numberStudentOn;
+    @ManyToOne
+    @JoinColumn(name = "faculty_id", nullable = false)
     private Faculty faculty;
+    @ManyToMany(mappedBy = "entrantSpeciality")
     private Set<Entrant> entrants;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy ="speciality" )
+    @Column(nullable = false)
     private Set<Introduction> introductions;
 
     public Speciality() {

@@ -1,11 +1,27 @@
 package com.project.domain;
 
+import javax.persistence.*;
 import java.util.Objects;
-
+@Entity
+@Table(name = "rating")
 public class Rating {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    private Long id;
 
+    @Column
     private Double totalMark;
+    @Column
     private boolean accepted;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Rating() {
     }

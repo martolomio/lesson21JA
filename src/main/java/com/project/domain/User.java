@@ -1,14 +1,28 @@
 package com.project.domain;
 
+import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
-
+@Entity
+@Table(name = "user")
 public class User {
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Integer id;
+    @Column
     private String firstName;
+    @Column
     private String lastName;
+    @Column
     private String email;
+    @Column
     private String password;
+    @ElementCollection(targetClass = Access.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "access", joinColumns = @JoinColumn(name = "user_id"))
+    @Enumerated(EnumType.STRING)
     private Set<Access> access;
 
     public User() {
