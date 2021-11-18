@@ -1,6 +1,9 @@
 package com.project.domain;
 
+import org.springframework.security.core.GrantedAuthority;
+
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
 @Entity
@@ -20,6 +23,8 @@ public class User {
     private String email;
     @Column
     private String password;
+    @Column
+    private boolean active;
     @ElementCollection(targetClass = Access.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "access", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
@@ -28,21 +33,31 @@ public class User {
     public User() {
     }
 
-    public User(String firstName,String lastName,String email,String password,Set<Access> access) {
+    public User(String firstName, boolean active, String lastName, String email, String password, Set<Access> access) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
         this.access = access;
+        this.active = active;
     }
 
-    public User(Integer id,String firstName,String lastName,String email,String password,Set<Access> access) {
+    public User(Integer id, boolean active, String firstName, String lastName, String email, String password, Set<Access> access) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
         this.access = access;
+        this.active = active;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public Integer getId() {
@@ -98,12 +113,12 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(access, user.access);
+        return active == user.active && Objects.equals(id, user.id) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(access, user.access);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, email, password, access);
+        return Objects.hash(id, firstName, lastName, email, password, active, access);
     }
 
     @Override
@@ -114,7 +129,48 @@ public class User {
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
+                ", active=" + active +
                 ", access=" + access +
                 '}';
     }
+//    @Override
+//    public Collection<? extends GrantedAuthority> getAuthorities() {
+//
+//        return getAccessLevels();
+//    }
+//
+//
+//    @Override
+//    public String getUsername() {
+//
+//        return email;
+//    }
+//
+//
+//    @Override
+//    public boolean isAccountNonExpired() {
+//
+//        return true;
+//    }
+//
+//
+//    @Override
+//    public boolean isAccountNonLocked() {
+//
+//        return true;
+//    }
+//
+//
+//    @Override
+//    public boolean isCredentialsNonExpired() {
+//
+//        return true;
+//    }
+//
+//
+//    @Override
+//    public boolean isEnabled() {
+//
+//        return isActive();
+//    }
 }

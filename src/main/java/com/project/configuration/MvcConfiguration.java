@@ -16,11 +16,4 @@ public class MvcConfiguration implements WebMvcConfigurer {
         registry.addViewController("/403").setViewName("403");
     }
 
-    @Bean
-    public InternalResourceViewResolver viewResolver(){
-        InternalResourceViewResolver resolver = new InternalResourceViewResolver();
-        resolver.setPrefix("/jsp/");
-        resolver.setSuffix(".jsp");
-        return resolver;
-    }
 }
