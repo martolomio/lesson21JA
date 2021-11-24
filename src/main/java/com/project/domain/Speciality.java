@@ -1,6 +1,9 @@
 package com.project.domain;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 import java.util.Set;
 @Entity
@@ -11,27 +14,29 @@ public class Speciality {
     @Column(name = "speciality_id")
     private Integer id;
     @Column
+    @NotBlank(message = "Це поле не може бути порожнім!")
     private String title;
     @Column
-    private Integer numberStudentOn;
+    @NotNull(message = "Це поле не може бути порожнім!")
+    @Min(value = 1, message = "Не може дорівнювати 0 ")
+    private Integer enrollmentPlan;
+    @Column
+    private boolean recruitmentCompleted;
+
     @ManyToOne
     @JoinColumn(name = "faculty_id", nullable = false)
     private Faculty faculty;
-    @ManyToMany(mappedBy = "entrantSpeciality")
-    private Set<Entrant> entrants;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy ="speciality" )
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "speciality")
     @Column(nullable = false)
-    private Set<Introduction> introductions;
+    private Set<Application> applications;
 
-    public Speciality() {
-    }
 
-    public Speciality(String title) {
+    public Speciality() {	}
+
+    public Speciality(String title, Integer enrollmentPlan) {
         this.title = title;
-    }
-
-    public Speciality(Integer id) {
-        this.id = id;
+        this.enrollmentPlan = enrollmentPlan;
     }
 
     public Integer getId() {
@@ -50,12 +55,20 @@ public class Speciality {
         this.title = title;
     }
 
-    public Integer getNumberStudentOn() {
-        return numberStudentOn;
+    public Integer getEnrollmentPlan() {
+        return enrollmentPlan;
     }
 
-    public void setNumberStudentOn(Integer numberStudentOn) {
-        this.numberStudentOn = numberStudentOn;
+    public void setEnrollmentPlan(Integer enrollmentPlan) {
+        this.enrollmentPlan = enrollmentPlan;
+    }
+
+    public boolean isRecruitmentCompleted() {
+        return recruitmentCompleted;
+    }
+
+    public void setRecruitmentCompleted(boolean recruitmentCompleted) {
+        this.recruitmentCompleted = recruitmentCompleted;
     }
 
     public Faculty getFaculty() {
@@ -66,44 +79,53 @@ public class Speciality {
         this.faculty = faculty;
     }
 
-    public Set<Entrant> getEntrants() {
-        return entrants;
+    public Set<Application> getApplications() {
+        return applications;
     }
 
-    public void setEntrants(Set<Entrant> entrants) {
-        this.entrants = entrants;
-    }
-
-    public Set<Introduction> getIntroductions() {
-        return introductions;
-    }
-
-    public void setIntroductions(Set<Introduction> introductions) {
-        this.introductions = introductions;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Speciality that = (Speciality) o;
-        return Objects.equals(id, that.id) && Objects.equals(title, that.title) && Objects.equals(numberStudentOn, that.numberStudentOn) && Objects.equals(faculty, that.faculty) && Objects.equals(entrants, that.entrants) && Objects.equals(introductions, that.introductions);
+    public void setApplications(Set<Application> applications) {
+        this.applications = applications;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, numberStudentOn, faculty, entrants, introductions);
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((title == null) ? 0 : title.hashCode());
+        result = prime * result + ((enrollmentPlan == null) ? 0 : enrollmentPlan.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Speciality other = (Speciality) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        if (title == null) {
+            if (other.title != null)
+                return false;
+        } else if (!title.equals(other.title))
+            return false;
+        if (enrollmentPlan == null) {
+            if (other.enrollmentPlan != null)
+                return false;
+        } else if (!enrollmentPlan.equals(other.enrollmentPlan))
+            return false;
+        return true;
     }
 
     @Override
     public String toString() {
-        return "Speciality{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", numberStudentOn=" + numberStudentOn +
-                ", faculty=" + faculty +
-                ", entrants=" + entrants +
-                ", introductions=" + introductions +
-                '}';
+        return "Speciality [id=" + id + ", title=" + title + ", enrollmentPlan=" + enrollmentPlan + "]";
     }
 }

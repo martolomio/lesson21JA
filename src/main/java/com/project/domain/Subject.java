@@ -1,6 +1,7 @@
 package com.project.domain;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 import java.util.Set;
 @Entity
@@ -11,8 +12,9 @@ public class Subject {
     @Column(name = "subject_id")
     private Integer id;
     @Column
+    @NotBlank(message = "Поле не може бути порожнім!")
     private String title;
-    @ManyToMany(mappedBy = "examSub")
+    @ManyToMany(mappedBy = "examSubject")
     private Set<Faculty> faculties;
 
     public Subject() {
@@ -26,6 +28,9 @@ public class Subject {
         this.id = id;
         this.title = title;
         this.faculties = faculties;
+    }
+
+    public Subject(Integer valueOf, String s) {
     }
 
     public String getTitle() {
