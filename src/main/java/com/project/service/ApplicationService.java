@@ -13,13 +13,18 @@ import java.util.stream.Collectors;
 
 @Service
 public class ApplicationService {
+
     @Autowired
+
     private ApplicationRepository applicationRepository;
     @Autowired
+
     private SubjectRepository subjectRepository;
     @Autowired
+
     SupportingDocumentService supportingDocumentService;
     @Autowired
+
     private RatingListService ratingListService;
 
     public List<Application> findByApplicant(Applicant applicant) {

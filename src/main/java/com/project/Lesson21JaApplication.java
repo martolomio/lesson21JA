@@ -6,6 +6,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class Lesson21JaApplication {
 
+
+
+
 	public static void main(String[] args) {
 		SpringApplication.run(Lesson21JaApplication.class, args);
 	}

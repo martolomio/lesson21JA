@@ -14,10 +14,13 @@ import java.util.Optional;
 
 @Service
 public class SpecialityService {
+
     @Autowired
     private SpecialityRepository specialityRepository;
+
     @Autowired
     private FacultyRepository facultyRepository;
+
     @Autowired
     private RatingListService ratingListService;
 

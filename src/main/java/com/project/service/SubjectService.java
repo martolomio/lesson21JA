@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class SubjectService {
+    
     @Autowired
     private SubjectRepository subjectRepository;
 

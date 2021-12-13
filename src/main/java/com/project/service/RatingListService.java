@@ -15,12 +15,16 @@ import java.util.stream.Collectors;
 
 @Service
 public class RatingListService {
+
     @Autowired
     private RatingListRepository ratingListRepository;
+
     @Autowired
     private SpecialityRepository specialityRepository;
+
     @Autowired
     private ApplicantRepository applicantRepository;
+
     @Autowired
     private MailSender mailSender;
 
