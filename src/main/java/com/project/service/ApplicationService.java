@@ -3,6 +3,8 @@ package com.project.service;
 import com.project.dao.ApplicationRepository;
 import com.project.dao.SubjectRepository;
 import com.project.domain.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,28 +16,31 @@ import java.util.stream.Collectors;
 @Service
 public class ApplicationService {
 
-    @Autowired
 
+    Logger logger = LoggerFactory.getLogger(ApplicationService.class);
+    @Autowired
     private ApplicationRepository applicationRepository;
     @Autowired
-
     private SubjectRepository subjectRepository;
     @Autowired
-
     SupportingDocumentService supportingDocumentService;
     @Autowired
-
     private RatingListService ratingListService;
 
     public List<Application> findByApplicant(Applicant applicant) {
+        logger.trace("Getting all applications by specified applicant from database...");
         return applicationRepository.findByApplicant(applicant);
     }
 
     public boolean createApplication(Application application, Map<String, String> form, MultipartFile[] supportingDocuments) throws IOException {
+        logger.trace("Adding new application to database...");
         Optional<Application> applicationFromDb = applicationRepository
                 .findByApplicantAndSpeciality(application.getApplicant(), application.getSpeciality());
 
         if (applicationFromDb.isPresent()) {
+            logger.warn("Application with applicant " + applicationFromDb.get().getApplicant().getUser().getFirstName()
+                    + " " + applicationFromDb.get().getApplicant().getUser().getLastName() + " and speciality \""
+                    + applicationFromDb.get().getSpeciality().getTitle() + "\" already exists in database...");
             return false;
         }
 
@@ -49,12 +54,13 @@ public class ApplicationService {
 
         RatingList ratingList = ratingListService.initializeRatingList(application, form);
         application.setRatingList(ratingList);
-
+        logger.trace("Saving new application in database...");
         applicationRepository.save(application);
         return true;
     }
 
     public void updateApplication(Application application, Map<String, String> form, MultipartFile[] supportingDocuments) throws IOException {
+        logger.trace("Updating application in database...");
         Map<Subject, Integer> znoMarks = parseZnoMarks(form);
         application.setZnoMarks(znoMarks);
 
@@ -66,10 +72,12 @@ public class ApplicationService {
         RatingList ratingList = ratingListService.initializeRatingList(application, form);
         application.setRatingList(ratingList);
 
+        logger.trace("Saving updated application in database...");
         applicationRepository.save(application);
     }
 
     public Map<String, String> getZnoMarksErrors(Map<String, String> form) {
+        logger.trace("Checking ZNO Marks for input errors...");
         Set<Integer> subjectIds = subjectRepository.findAll().stream().map(Subject::getId).collect(Collectors.toSet());
         Map<String, String> znoMarksErrors = new HashMap<>();
 
@@ -99,6 +107,7 @@ public class ApplicationService {
     }
 
     public Map<Subject, Integer> parseZnoMarks(Map<String, String> form) {
+        logger.trace("Parsing ZNO Marks from Form Strings and mapping to Java Collection of objects...");
         Set<Integer> subjectIds = subjectRepository.findAll().stream().map(Subject::getId).collect(Collectors.toSet());
         Map<Subject, Integer> znoMarks = new HashMap<>();
 
@@ -115,10 +124,12 @@ public class ApplicationService {
     }
 
     public void deleteApplication(Application application) {
+        logger.trace("Deleting application from database...");
         applicationRepository.delete(application);
     }
 
     public Map<Integer, String> getApplicationsStatus(List<Application> applicationsList) {
+        logger.trace("Determining current application status...");
         Map<Integer, String> applicationsStatus = new HashMap<>();
         for (Application application : applicationsList) {
             if (!application.getRatingList().isAccepted() && application.getRatingList().getRejectionMessage() == null) {
@@ -133,6 +144,7 @@ public class ApplicationService {
     }
 
     public boolean checkForRejectedApplications(List<Application> applicationsList) {
+        logger.trace("Checking applications list for rejected application status present...");
         boolean isRejectedApplicationPresent = false;
 
         for (Application application : applicationsList) {

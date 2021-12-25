@@ -46,7 +46,7 @@ public class ApplicationController {
         List<Application> applicationsList = applicationService.findByApplicant(user.getApplicant());
         model.addAttribute("applications", applicationsList);
         model.addAttribute("applicationsStatus", applicationService.getApplicationsStatus(applicationsList));
-        session.setAttribute("specialities", ratingListService.findSpecialitiesByApplicant(user.getId()));
+        session.setAttribute("specialities", ratingListService.findSpecialitiesAppliedByApplicant(user.getId()));
 
         return "applicationList";
     }
@@ -60,9 +60,8 @@ public class ApplicationController {
     }
 
     @PreAuthorize("hasAuthority('USER')")
-    @
-            PostMapping("/create")
-    public String createApplication(@RequestParam Map<String, String> form, @RequestParam("files") MultipartFile[] supportingDocuments,
+    @PostMapping("/create")
+    public String createApplication(@RequestParam Map<String, String> form,	@RequestParam("files") MultipartFile[] supportingDocuments,
                                     @Valid Application application, BindingResult bindingResult, Model model) throws IOException {
         Map<String, String> znoMarksErrors = applicationService.getZnoMarksErrors(form);
         Map<String, String> supportingDocumentErrors = supportingDocumentService.getSupportingDocumentErrors(supportingDocuments);
@@ -148,4 +147,5 @@ public class ApplicationController {
         }
 
         return "notAcceptedApps";
-    }	}
+    }
+}
