@@ -1,7 +1,5 @@
 package com.project.controller;
 
-import com.project.dao.UserRepository;
-import com.project.domain.Access;
 import com.project.domain.User;
 import com.project.dto.CaptchaResponse;
 import com.project.service.UserService;
@@ -56,17 +54,17 @@ public class RegistrationController {
         }
 
         if (user.getPassword() != null && !user.getPassword().equals(confirmPassword)) {
-            model.addAttribute("confirmPasswordError", "Введені паролі не співпадають");
+            model.addAttribute("confirmPasswordError2", "Введені паролі не співпадають");
             return "registration";
         }
 
         if (!userService.addUser(user)) {
             model.addAttribute("messageType", "danger");
-            model.addAttribute("message", "Такой пользователь уже существует!");
+            model.addAttribute("userExistsMessage", "Такий користувач вже є!");
             return "registration";
         }
 
-        redir.addFlashAttribute("message", "Для активации пользователя перейдите по ссылке в письме, отправленном на указанный Вами электронный ящик!");
+        redir.addFlashAttribute("activationMessage", "Для активації перейдіть за посиланням в листі висланому на Вашу електронну пошту!");
         return "redirect:/login/";
     }
 
@@ -76,10 +74,10 @@ public class RegistrationController {
 
         if (isActivated) {
             model.addAttribute("messageType", "success");
-            model.addAttribute("message", "Пользователь успешно активирован!");
+            model.addAttribute("activationSucceedMessage", "Користувача активовано!");
         } else {
             model.addAttribute("messageType", "danger");
-            model.addAttribute("message", "Код активации не найден!");
+            model.addAttribute("activationFailedMessage", "Код активації не знайдений!");
         }
 
         return "login";

@@ -42,7 +42,7 @@ public class FacultyController {
     }
 
     @PostMapping("/create")
-    public String createFaculty(@RequestParam Map<String, String> form, @Valid Faculty faculty, BindingResult bindingResult, Model model) {
+    public String createFaculty(@RequestParam Map<String, String> form, @Valid Faculty faculty,	BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             Map<String, String> errors = ControllerUtils.getErrors(bindingResult);
             model.mergeAttributes(errors);
@@ -54,7 +54,7 @@ public class FacultyController {
         boolean facultyExists = !facultyService.createFaculty(faculty, form);
 
         if (facultyExists) {
-            model.addAttribute("message", "Такий факультет вже є!");
+            model.addAttribute("facultyExistsMessage", "Такий факультет вже є!");
             model.addAttribute("subjects", subjectService.findAll());
 
             return "facultyCreator";

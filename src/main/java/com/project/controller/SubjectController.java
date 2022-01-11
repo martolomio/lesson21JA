@@ -37,7 +37,7 @@ public class SubjectController {
     }
 
     @PostMapping("/create")
-    public String createSubject(@Valid Subject subject, BindingResult bindingResult, Model model) {
+    public String createSubject(@Valid Subject subject,	BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             Map<String, String> errors = ControllerUtils.getErrors(bindingResult);
             model.mergeAttributes(errors);
@@ -48,7 +48,7 @@ public class SubjectController {
         boolean subjectExists = !subjectService.createSubject(subject);
 
         if (subjectExists) {
-            model.addAttribute("message", "Цей предмет вже є!");
+            model.addAttribute("subjectExistsMessage", "Цей предмет вже є!");
             return "subjectCreator";
         }
 

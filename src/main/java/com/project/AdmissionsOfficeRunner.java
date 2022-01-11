@@ -4,13 +4,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Lesson21JaApplication {
+public class AdmissionsOfficeRunner {
 
 
 
 
 	public static void main(String[] args) {
-		SpringApplication.run(Lesson21JaApplication.class, args);
+		SpringApplication.run(AdmissionsOfficeRunner.class, args);
 	}
 
 }
